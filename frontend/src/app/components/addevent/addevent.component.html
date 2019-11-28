@@ -1,0 +1,96 @@
+
+<h2>New Event</h2>
+<form [formGroup]="eventForm">
+    <div class="example-container">
+
+        <mat-label>Event Name:</mat-label>
+        <mat-form-field appearance="outline">    
+        <input matInput placeholder="Name" class="example-full-width" formControlName="name" required>
+        </mat-form-field>
+
+        <mat-label>Location:</mat-label>
+        <mat-form-field appearance="outline">    
+        <input matInput placeholder="Location" class="example-full-width" formControlName="location" required>
+        </mat-form-field>
+
+        <mat-label>Capacity:</mat-label>
+        <mat-form-field appearance="outline">    
+        <input matInput placeholder="Capacity" class="example-full-width" type="number" min="0" formControlName="capacity" required>
+        </mat-form-field>
+        <p>
+            <span>
+                    <mat-label>From:</mat-label>
+                    <mat-form-field>
+                    <input matInput [matDatepicker]="startdate" placeholder=" Start date" disabled [min]="minDateStart" [max]="maxDateStart" formControlName="dateFrom" (dateChange)="dateStartChange($event)">
+                    <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
+                    <mat-datepicker #startdate disabled="false"></mat-datepicker>
+                    </mat-form-field>
+            </span>
+            <span style="margin-left: 10%">
+                    <mat-label>To:</mat-label>
+                    <mat-form-field>
+                    <input matInput [matDatepicker]="todate" placeholder=" End date" disabled [min]="minDateEnd" formControlName="dateTo" (dateChange)="dateEndChange($event)">
+                    <mat-datepicker-toggle matSuffix [for]="todate"></mat-datepicker-toggle>
+                    <mat-datepicker #todate disabled="false"></mat-datepicker>
+                    </mat-form-field>
+            </span>
+        </p>
+      
+        
+
+        <h4>Add pre-survey questions when register for this event (optional)</h4>
+ 
+        <div formArrayName="preSurvey" *ngFor="let item of eventForm.get('preSurvey').controls; let i = index;">
+            <div [formGroupName]="i">
+                <mat-card >
+                    <mat-card-header>
+                        <mat-card-title>Question {{i+1}}</mat-card-title>
+                        <button mat-flat-button color="warn" (click)="removeQ(i)">Remove this question</button>
+                    </mat-card-header>
+                
+                    <mat-card-content>
+                            
+                            <p>
+                                <mat-label>Question:</mat-label>
+                                <mat-form-field style="margin-left:5px">    
+                                    <input matInput placeholder=" your question..." class="example-full-width" formControlName="question">
+                                </mat-form-field>
+                            </p>
+                            <P>
+                                <mat-label>Type:</mat-label>
+                                <mat-form-field style="margin-left:5px">
+                                    <mat-label>choose a type</mat-label>
+                                    <mat-select  name="type" formControlName="type"  (ngModelChange)="changeType($event,item)">
+                                    <mat-option *ngFor="let type of types" [value]="type">{{type}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </P>
+                            <div formArrayName="options" *ngFor="let option of item.get('options').controls; let optionIndex = index;">
+                                <p>
+                                    <mat-radio-button *ngIf="item.value.type=='RadioButton'" disabled></mat-radio-button>
+                                    <mat-checkbox *ngIf="item.value.type=='CheckBox'" disabled></mat-checkbox>
+                                    <mat-label *ngIf="item.value.type=='DropdownList'"><b>{{optionIndex}}. </b></mat-label>
+
+                                    <span *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">
+                                        <mat-form-field style="margin-left:10px" >    
+                                        <input matInput placeholder="option {{optionIndex+1}}" class="example-full-width" [formControlName]="optionIndex">
+                                        </mat-form-field>
+                                        <button mat-stroked-button color="warn" (click)="removeOption(item,optionIndex)" style="margin-left:5px">Remove</button>
+                                    </span>
+                                </p>                           
+                            </div>
+                            <p>
+                                <button mat-flat-button color="primary" (click)="addOption(item)" *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">Add Option</button>
+                            </p>
+                    </mat-card-content>
+                
+                </mat-card>
+            </div>
+        </div>
+        <button mat-flat-button color="primary" style="width:30%" (click)="addQuestion()">Add question</button>
+    </div>
+    <br><br>
+    {{eventForm.value | json}}
+    <button mat-flat-button color="primary" style="width:100%;margin:0 auto">Submit</button>
+   
+</form>

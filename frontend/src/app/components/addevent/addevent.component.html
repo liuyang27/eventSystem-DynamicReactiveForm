@@ -8,20 +8,81 @@
         <input matInput placeholder="Name" class="example-full-width" formControlName="name" required>
         </mat-form-field>
 
-        <mat-label>Location:</mat-label>
+        <mat-label>Venue:</mat-label>
         <mat-form-field appearance="outline">    
-        <input matInput placeholder="Location" class="example-full-width" formControlName="location" required>
+        <input matInput placeholder="Location" class="example-full-width" formControlName="venue" required>
         </mat-form-field>
 
-        <mat-label>Capacity:</mat-label>
+        <mat-label>Capacity(0 means unlimit):</mat-label>
         <mat-form-field appearance="outline">    
         <input matInput placeholder="Capacity" class="example-full-width" type="number" min="0" formControlName="capacity" required>
         </mat-form-field>
+
+        <mat-label>Entry Fee(0 means free entry):</mat-label>
+        <mat-form-field appearance="outline">  
+        <span matPrefix><b>$&nbsp; </b></span>  
+        <input matInput placeholder="entry fee" class="example-full-width" type="number" min="0" formControlName="entryFee" required>
+        </mat-form-field>
+
+        <section class="example-section">
+            <mat-radio-group formControlName="eventformat" required>
+                <mat-label>Format:</mat-label>
+                <p  *ngFor="let format of eventformats;let i = index">
+                        <mat-radio-button  value="{{format}}">{{format}}</mat-radio-button>
+                </p>
+            </mat-radio-group>
+        </section>
+        <br>
+
+        <mat-label>Category:</mat-label>
+        <mat-form-field>
+            <mat-select placeholder="select category.." multiple="multiple" formControlName="category">
+                <mat-option *ngFor="let category of selectedCategory" value="{{category}}">{{category}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-chip-list">
+            <mat-chip-list #chipList aria-label="Fruit selection">
+                <mat-chip
+                *ngFor="let category of selectedCategory"
+                [selectable]="true"
+                [removable]="true"
+                (removed)="removeCategory(category)">
+                {{category}}
+                <!-- <mat-icon matChipRemove>cancel</mat-icon> -->
+                </mat-chip>
+                <!-- <input
+                placeholder="New fruit..."
+                #fruitInput
+                [formControl]="fruitCtrl"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)"> -->
+            </mat-chip-list>
+            <!-- <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                {{fruit}}
+                </mat-option>
+            </mat-autocomplete> -->
+            </mat-form-field>
+
+        <mat-label>Organizer:</mat-label>
+        <mat-form-field appearance="outline">    
+        <input matInput placeholder="organizer" class="example-full-width" formControlName="organizer">
+        </mat-form-field>
+
+       
+   
+        
+
+
+        <mat-label>Date:</mat-label>
         <p>
             <span>
                     <mat-label>From:</mat-label>
                     <mat-form-field>
-                    <input matInput [matDatepicker]="startdate" placeholder=" Start date" disabled [min]="minDateStart" [max]="maxDateStart" formControlName="dateFrom" (dateChange)="dateStartChange($event)">
+                    <input matInput [matDatepicker]="startdate" placeholder=" Start date" disabled [min]="minDateStart" [max]="maxDateStart" formControlName="dateFrom" (dateChange)="dateStartChange($event)" required>
                     <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
                     <mat-datepicker #startdate disabled="false"></mat-datepicker>
                     </mat-form-field>
@@ -29,14 +90,39 @@
             <span style="margin-left: 10%">
                     <mat-label>To:</mat-label>
                     <mat-form-field>
-                    <input matInput [matDatepicker]="todate" placeholder=" End date" disabled [min]="minDateEnd" formControlName="dateTo" (dateChange)="dateEndChange($event)">
+                    <input matInput [matDatepicker]="todate" placeholder=" End date" disabled [min]="minDateEnd" formControlName="dateTo" (dateChange)="dateEndChange($event)" required>
                     <mat-datepicker-toggle matSuffix [for]="todate"></mat-datepicker-toggle>
                     <mat-datepicker #todate disabled="false"></mat-datepicker>
                     </mat-form-field>
             </span>
         </p>
-      
-        
+  
+        <mat-label>Timing:</mat-label>
+        <p>
+            <span >
+                <mat-label>From:</mat-label>
+                <ngx-timepicker-field [defaultTime]="'09:00 am'" formControlName="timingFrom"></ngx-timepicker-field>
+            </span>
+            <span>
+                <mat-label>To:</mat-label>
+                <ngx-timepicker-field [defaultTime]="'05:00 pm'" formControlName="timingTo"></ngx-timepicker-field>
+            </span>
+     
+        </p>
+
+
+        <mat-label>Introduction:</mat-label>
+        <mat-form-field>
+        <textarea matInput placeholder="about this event..." formControlName="introduction"></textarea>
+        </mat-form-field>
+
+        <mat-label>Remarks:</mat-label>
+        <mat-form-field>
+        <textarea matInput placeholder="remarks.." formControlName="remarks"></textarea>
+        </mat-form-field>
+
+
+
 
         <h4>Add pre-survey questions when register for this event (optional)</h4>
  
@@ -53,15 +139,15 @@
                             <p>
                                 <mat-label>Question:</mat-label>
                                 <mat-form-field style="margin-left:5px">    
-                                    <input matInput placeholder=" your question..." class="example-full-width" formControlName="question">
+                                    <input matInput placeholder=" your question..." class="example-full-width" formControlName="question" >
                                 </mat-form-field>
                             </p>
                             <P>
                                 <mat-label>Type:</mat-label>
                                 <mat-form-field style="margin-left:5px">
                                     <mat-label>choose a type</mat-label>
-                                    <mat-select  name="type" formControlName="type"  (ngModelChange)="changeType($event,item)">
-                                    <mat-option *ngFor="let type of types" [value]="type">{{type}}</mat-option>
+                                    <mat-select  name="type" formControlName="type"  (ngModelChange)="changeType($event,item)" >
+                                    <mat-option *ngFor="let type of questiontypes" [value]="type">{{type}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </P>

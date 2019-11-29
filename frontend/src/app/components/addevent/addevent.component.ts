@@ -18,8 +18,10 @@ export class AddeventComponent implements OnInit {
   
   preSurvey: FormArray;
   options: FormArray;
-  types=["Text","RadioButton","CheckBox","DropdownList"];
-  selectedType;
+  questiontypes=["Text","RadioButton","CheckBox","DropdownList"];
+  eventformats=["Tradeshows","Conferences","Workshops"];
+
+  selectedCategory:string[]=["Education & Training","Entertainment & Media","Fashion & Beauty","Food & Beverages","Business Services"];
   showAddOptionButtion:boolean=false;
   constructor(private fb:FormBuilder) { }
 
@@ -35,14 +37,28 @@ export class AddeventComponent implements OnInit {
     this.maxDateStart=new Date(event.targetElement.value)
   }
 
+  removeCategory(category){
+    const index = this.selectedCategory.indexOf(category);
+    if (index >= 0) {
+      this.selectedCategory.splice(index, 1);
+    }
+  }
 
   eventForm=this.fb.group({
       name:[''],
-      location:[''],
-      capacity:[''],
+      venue:[''],
+      capacity:[0],
+      entryFee:[0],
       dateFrom:[''],
       dateTo:[''],
-      preSurvey: this.fb.array([])
+      timingFrom:['09:00 am'],
+      timingTo:['06:30 pm'],
+      preSurvey: this.fb.array([]),
+      introduction:[],
+      category:[],
+      organizer:[],
+      eventformat:[],
+      remarks:[]
   })
 
   createQ(): FormGroup {

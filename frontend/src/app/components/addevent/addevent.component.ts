@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder,FormGroup } from '@angular/forms';
-
+import { FormArray, FormBuilder,FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-addevent',
@@ -15,19 +15,29 @@ export class AddeventComponent implements OnInit {
   minDateEnd;
   maxDateStart;
 
-  
-  preSurvey: FormArray;
+  preEventSurvey: FormArray;
   options: FormArray;
-  questiontypes=["Text","RadioButton","CheckBox","DropdownList"];
-  eventformats=["Tradeshows","Conferences","Workshops"];
+  questionTypes=["Text","RadioButton","CheckBox","DropdownList"];
+  eventFormats=["Tradeshows","Conferences","Workshops"];
+  
+  eventCategory:any[]=[];
+  selectedCategory:FormArray;
 
-  selectedCategory:string[]=["Education & Training","Entertainment & Media","Fashion & Beauty","Food & Beverages","Business Services"];
-  showAddOptionButtion:boolean=false;
-  constructor(private fb:FormBuilder) { }
+
+
+  constructor(private fb:FormBuilder,public http:HttpClient) { }
 
   ngOnInit() {
     this.minDateStart=new Date();
     this.minDateEnd=new Date();
+    this.getAllEventCategories();
+  }
+
+  getAllEventCategories(){
+    let _url:string="/assets/data/eventCategory";
+    this.http.get(_url).subscribe((res:any)=>{
+      this.eventCategory=[...res];
+    })
   }
 
   dateStartChange(event){
@@ -38,14 +48,15 @@ export class AddeventComponent implements OnInit {
   }
 
   removeCategory(category){
-    const index = this.selectedCategory.indexOf(category);
-    if (index >= 0) {
-      this.selectedCategory.splice(index, 1);
-    }
+    this.selectedCategory = this.eventForm.get('category') as FormArray;
+    this.selectedCategory.value.splice(this.selectedCategory.value.indexOf(category),1)
+    this.eventForm.patchValue({
+      category:this.selectedCategory.value
+    })
   }
 
   eventForm=this.fb.group({
-      name:[''],
+      name:['',Validators.required],
       venue:[''],
       capacity:[0],
       entryFee:[0],
@@ -53,16 +64,18 @@ export class AddeventComponent implements OnInit {
       dateTo:[''],
       timingFrom:['09:00 am'],
       timingTo:['06:30 pm'],
-      preSurvey: this.fb.array([]),
+      preEventSurvey: this.fb.array([]),
       introduction:[],
       category:[],
       organizer:[],
       eventformat:[],
-      remarks:[]
+      remarks:[],
+      registrationEnable:['true']
   })
 
   createQ(): FormGroup {
     return this.fb.group({
+      qid:[],
       question:[],
       type:[],
       options:this.fb.array([])
@@ -70,8 +83,8 @@ export class AddeventComponent implements OnInit {
   }
 
   addQuestion(): void {
-    this.preSurvey = this.eventForm.get('preSurvey') as FormArray;
-    this.preSurvey.push(this.createQ());
+    this.preEventSurvey = this.eventForm.get('preEventSurvey') as FormArray;
+    this.preEventSurvey.push(this.createQ());
   }
 
   changeType(type,item){
@@ -100,7 +113,11 @@ export class AddeventComponent implements OnInit {
 
 
   removeQ(index){
-    this.preSurvey.removeAt(index)
+    this.preEventSurvey.removeAt(index)
+  }
+
+  onSubmit(){
+    console.log(this.eventForm.value)
   }
 
 }

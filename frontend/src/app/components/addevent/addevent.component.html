@@ -1,6 +1,6 @@
 
 <h2>New Event</h2>
-<form [formGroup]="eventForm">
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
     <div class="example-container">
 
         <mat-label>Event Name:</mat-label>
@@ -27,45 +27,28 @@
         <section class="example-section">
             <mat-radio-group formControlName="eventformat" required>
                 <mat-label>Format:</mat-label>
-                <p  *ngFor="let format of eventformats;let i = index">
+                <p  *ngFor="let format of eventFormats;let i = index">
                         <mat-radio-button  value="{{format}}">{{format}}</mat-radio-button>
                 </p>
             </mat-radio-group>
         </section>
         <br>
-
-        <mat-label>Category:</mat-label>
-        <mat-form-field>
-            <mat-select placeholder="select category.." multiple="multiple" formControlName="category">
-                <mat-option *ngFor="let category of selectedCategory" value="{{category}}">{{category}}</mat-option>
+        <div>
+            <mat-label>Category:</mat-label>
+            <mat-form-field style="margin-left:20px">
+            <mat-select placeholder="select category.." multiple="multiple" formControlName="category" required> 
+                <mat-option *ngFor="let category of eventCategory" value="{{category}}">{{category}}</mat-option>
             </mat-select>
-        </mat-form-field>
-        <mat-form-field class="example-chip-list">
-            <mat-chip-list #chipList aria-label="Fruit selection">
-                <mat-chip
-                *ngFor="let category of selectedCategory"
-                [selectable]="true"
-                [removable]="true"
-                (removed)="removeCategory(category)">
-                {{category}}
-                <!-- <mat-icon matChipRemove>cancel</mat-icon> -->
-                </mat-chip>
-                <!-- <input
-                placeholder="New fruit..."
-                #fruitInput
-                [formControl]="fruitCtrl"
-                [matAutocomplete]="auto"
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="add($event)"> -->
-            </mat-chip-list>
-            <!-- <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
-                {{fruit}}
-                </mat-option>
-            </mat-autocomplete> -->
             </mat-form-field>
+        </div>
+    
+        <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip *ngFor="let category of eventForm.value.category" (removed)="removeCategory(category)" selected>
+                {{category}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+        <br><br>
 
         <mat-label>Organizer:</mat-label>
         <mat-form-field appearance="outline">    
@@ -120,13 +103,14 @@
         <mat-form-field>
         <textarea matInput placeholder="remarks.." formControlName="remarks"></textarea>
         </mat-form-field>
+        
+        <mat-slide-toggle formControlName="registrationEnable">Open for registration</mat-slide-toggle>
 
 
 
-
-        <h4>Add pre-survey questions when register for this event (optional)</h4>
+        <h4>Add pre-event survey questions (optional)</h4>
  
-        <div formArrayName="preSurvey" *ngFor="let item of eventForm.get('preSurvey').controls; let i = index;">
+        <div formArrayName="preEventSurvey" *ngFor="let item of eventForm.get('preEventSurvey').controls; let i = index;">
             <div [formGroupName]="i">
                 <mat-card >
                     <mat-card-header>
@@ -135,19 +119,19 @@
                     </mat-card-header>
                 
                     <mat-card-content>
-                            
+                            <input type="text" formControlName="qid" value="{{i+1}}">
                             <p>
                                 <mat-label>Question:</mat-label>
                                 <mat-form-field style="margin-left:5px">    
-                                    <input matInput placeholder=" your question..." class="example-full-width" formControlName="question" >
+                                    <input matInput placeholder=" your question..." class="example-full-width" formControlName="question">
                                 </mat-form-field>
                             </p>
                             <P>
                                 <mat-label>Type:</mat-label>
                                 <mat-form-field style="margin-left:5px">
                                     <mat-label>choose a type</mat-label>
-                                    <mat-select  name="type" formControlName="type"  (ngModelChange)="changeType($event,item)" >
-                                    <mat-option *ngFor="let type of questiontypes" [value]="type">{{type}}</mat-option>
+                                    <mat-select  name="type" formControlName="type"  (ngModelChange)="changeType($event,item)">
+                                    <mat-option *ngFor="let type of questionTypes" [value]="type">{{type}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </P>
@@ -166,17 +150,18 @@
                                 </p>                           
                             </div>
                             <p>
-                                <button mat-flat-button color="primary" (click)="addOption(item)" *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">Add Option</button>
+                                <button mat-flat-button color="primary" (click)="addOption(item);$event.preventDefault()" *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">Add Option</button>
                             </p>
                     </mat-card-content>
                 
                 </mat-card>
             </div>
         </div>
-        <button mat-flat-button color="primary" style="width:30%" (click)="addQuestion()">Add question</button>
+        <button mat-flat-button color="primary" style="width:30%" (click)="addQuestion();$event.preventDefault()">Add question</button>
     </div>
     <br><br>
     {{eventForm.value | json}}
-    <button mat-flat-button color="primary" style="width:100%;margin:0 auto">Submit</button>
-   
+  
+    <button mat-flat-button color="primary" style="width:100%;margin:0 auto" [disabled]="!eventForm.valid">Submit</button>
+    <br><br>
 </form>

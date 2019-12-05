@@ -54,8 +54,42 @@ exports.showIndex=function(req,res){
           "__v" : element.__v
       }) );
       res.json({"results":results});  
-})
+  })
 }
+
+exports.doDeleteEvent=function(req,res){
+  var eid=req.params.eid;
+	Event.find({"_id":eid},function(err,results){
+		if(err || results.length==0){
+			res.json({"results":-1});
+			return;
+		}
+		results[0].remove(function(err){
+			if(err){
+				res.json({"results":-1});
+				return;
+			}
+			res.json({"results":1});
+		})
+  })
+  
+}
+
+exports.getEventDetail=function(req,res){
+  var eid=req.params.eid;
+  Event.find({"_id":eid},function(err,results){
+		if(err || results.length==0){
+			res.json({"results":-1});
+			return;
+		}
+		res.json({"results":results[0]});
+	
+  })
+}
+
+
+
+
 
 exports.sendEmail=function(req,res){
 

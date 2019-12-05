@@ -11,8 +11,8 @@ var mainCtrl = require("./controllers/mainCtrl.js");
 var app=express();
 app.use(cors())
 
-// mongoose.connect('mongodb://localhost:27017/RegisterSystem');
-mongoose.connect("mongodb+srv://binny_01:binny01@cluster0-ziirr.gcp.mongodb.net/EventManagementSystem?retryWrites=true&w=majority");
+mongoose.connect('mongodb://localhost:27017/RegisterSystem');
+// mongoose.connect("mongodb+srv://binny_01:binny01@cluster0-ziirr.gcp.mongodb.net/EventManagementSystem?retryWrites=true&w=majority");
 
 // app.use(session({
 //     secret: 'liuyang',
@@ -62,6 +62,8 @@ app.get ("/",                          mainCtrl.showIndex);
 // app.post("/unregister",             mainCtrl.unregister);
 app.get("/sendemail",                  mainCtrl.sendEmail)
 app.post("/event",                     mainCtrl.doAddEvent)
+app.delete("/event/:eid",              mainCtrl.doDeleteEvent)
+app.get("/event/:eid",                 mainCtrl.getEventDetail)
 
 app.use(express.static("public"));
 

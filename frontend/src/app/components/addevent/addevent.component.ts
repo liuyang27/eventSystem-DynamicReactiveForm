@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy  } from '@angular/core';
 import { FormArray, FormBuilder,FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { EventService } from '../../services/event.service';
 
 @Component({
   selector: 'app-addevent',
   templateUrl: './addevent.component.html',
-  styleUrls: ['./addevent.component.scss']
+  styleUrls: ['./addevent.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 
 
-export class AddeventComponent implements OnInit {
+export class AddeventComponent implements OnInit  {
   minDateStart;
   minDateEnd;
   maxDateStart;
@@ -25,7 +27,9 @@ export class AddeventComponent implements OnInit {
 
 
 
-  constructor(private fb:FormBuilder,public http:HttpClient) { }
+  constructor(private fb:FormBuilder,
+              public http:HttpClient,
+              private eventService:EventService) { }
 
   ngOnInit() {
     this.minDateStart=new Date();
@@ -75,10 +79,12 @@ export class AddeventComponent implements OnInit {
 
   createQ(): FormGroup {
     return this.fb.group({
-      qid:[],
       question:[],
       type:[],
-      options:this.fb.array([])
+      options:this.fb.array([]),
+      optional:[false],
+      print:[false],
+      maxChoice:[]
     });
   }
 
@@ -90,9 +96,13 @@ export class AddeventComponent implements OnInit {
   changeType(type,item){
      if(type=="Text"){
         (item.get("options") as FormArray).clear();
+        this.updateMaxChoice(item);
+        // item.patchValue({ maxChoice:1 })
      }else{
         if(item.get("options").value.length<=0){
             this.addOption(item);
+        }else{
+            this.updateMaxChoice(item);
         }
      }
   }
@@ -100,15 +110,14 @@ export class AddeventComponent implements OnInit {
 
   addOption(item){
     this.options=item.get('options') as FormArray;
-    this.options.push(this.fb.control(null))
+    this.options.push(this.fb.control(null));
+
+    this.updateMaxChoice(item);
   }
 
   removeOption(item,index){
-    // console.log(index);
-    // console.log((item.controls));
-    // console.log((item.controls["options"].controls[index].value));
-  
-    (item.controls["options"] as FormArray).removeAt(index)
+    (item.controls["options"] as FormArray).removeAt(index);
+    this.updateMaxChoice(item);
   }
 
 
@@ -117,8 +126,26 @@ export class AddeventComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.eventForm.value)
+    console.log(this.eventForm.value);
+    this.eventService.addNewEvent(this.eventForm.value).subscribe(data=>{
+      if(data.results==1){
+        alert("new event added.");
+        window.location.href="";
+      }else{
+        alert("error..");
+      }
+    })
   }
+
+  updateMaxChoice(item){
+    if(item.get("type").value=="CheckBox"){
+      item.get("maxChoice").patchValue(item.get("options").value.length)
+    }else{
+      item.get("maxChoice").patchValue(null);
+    }
+  }
+
+ 
 
 }
 

@@ -1,18 +1,8 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
-
-
-export interface EventElement {
-  eid:string;
-  name: string;
-  dayofweek: string;
-  capacity: number;
-  teacher: string;
-  introdction:string;
-  allow:[string];
-}
-
+import { EventService } from '../../services/event.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event',
@@ -24,37 +14,17 @@ export interface EventElement {
 
 
 export class EventComponent implements OnInit {
-  eventlist:EventElement[]=[]
-  displayedColumns: string[] = ['eid', 'name', 'dayofweek', 'allow','capacity','teacher','introdction','register'];
-  // displayedColumns: string[] = ['eid', 'name'];
-  dataSource
-  // dataSource = new MatTableDataSource(this.eventlist);
 
-  constructor(private http: HttpClient) { }
+  displayedColumns: string[] = ['name', 'eventformat', 'category','date','venue','details'];
+  dataSource;
+ 
+
+  constructor(private http: HttpClient,
+              private eventService:EventService,
+              private router:Router) { }
 
   ngOnInit() {
-   
-    this.getEvents().subscribe(
-      (data)=>{
-          var d = data["results"]
-          for(var event of data["results"]){
-            var e:EventElement= {
-              eid:event["cid"],
-              name: event["name"],
-              dayofweek: event["dayofweek"],
-              capacity: event["number"],
-              teacher: event["teacher"],
-              introdction:event["briefintro"],
-              allow:event["allow"],
-            }
-            this.eventlist.push(e);
-          }
-          this.dataSource=new MatTableDataSource(this.eventlist);
-          // console.log(this.eventlist)
-      }
-
-    )
-
+    this.loadPage();
   }
 
   getEvents() {
@@ -65,8 +35,30 @@ export class EventComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  register(id){
-    alert(id)
+  showDetails(id){
+    this.router.navigate(['/event',id]);
+  }
+
+  onDelete(id){
+    if(!confirm("Are you sure to delete this event? ")) {
+      return;
+    }
+    this.eventService.deleteEventById(id).subscribe((data)=>{
+      if(data.results==1){
+        alert("Event deleted");
+        this.loadPage();
+        
+      }else{
+        alert("error...");
+      }
+    })  
+  }
+
+  loadPage(){
+    this.getEvents().subscribe(
+      (data)=>{
+          this.dataSource=new MatTableDataSource(data["results"]);
+      })
   }
 
 }

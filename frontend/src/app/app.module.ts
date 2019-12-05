@@ -11,12 +11,14 @@ import { AddeventComponent } from './components/addevent/addevent.component';
 import { ReactiveFormsModule } from '@angular/forms'
 
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { EventdetailComponent } from './components/eventdetail/eventdetail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EventComponent,
-    AddeventComponent
+    AddeventComponent,
+    EventdetailComponent
   ],
   imports: [
     BrowserModule,

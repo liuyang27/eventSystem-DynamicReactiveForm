@@ -1,6 +1,7 @@
 
-.event_time_area {
-    padding-bottom: 120px;
+  .event_time_area {
+    padding-top: 120px;
+    padding-bottom: 20px;
   }
   
   .event_time_area.ab_event .event_time_inner {
@@ -10,7 +11,7 @@
   .event_time_inner {
     max-width: 944px;
     margin: auto;
-    background: #fff;
+    background:#ffffff;
     margin-top: -90px;
     border-radius: 5px;
     -webkit-box-shadow: 0px 8px 30px 0px rgba(153, 153, 153, 0.1);
@@ -25,7 +26,7 @@
   
   .event_time_inner .event_text h3 {
     color: #222222;
-    font-size: 21px;
+    font-size: 25px;
     text-transform: uppercase;
     margin-bottom: 15px;
   }
@@ -92,3 +93,99 @@
     text-transform: capitalize;
   }
   
+
+  .cover{
+    height: 600px;
+    width: 100%;
+  }
+
+  .cover-content{
+    margin-top: 100px;
+    opacity:0.3;
+    background-color: #777777;
+    height: 400px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .cover-title{
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+    -webkit-transition: all 0.4s 300ms ease-in-out;
+    transition: all 0.4s 300ms ease-in-out;
+  }
+
+  .event_table{
+    padding: 0px;
+    margin: 0px;
+    border-collapse: collapse;
+    width:100%;
+  }
+  tr div{
+    min-width:100px;
+    display: inline-block;
+  }
+
+  td{
+    max-width:200px;
+    overflow-wrap: break-word;
+  }
+  td h4{
+    margin: 0px;
+    padding:0px;
+  }
+  .icon{
+    font-size:100px;
+  }
+ 
+  .section_title {
+    position: relative;
+    margin-bottom: 25px;
+  }
+  .section_title .title {
+    text-transform: uppercase;
+    padding: 10px 0;
+    font-size: 36px;
+  }
+  .section_title .title:before {
+    width: 30px;
+    content: " ";
+    position: absolute;
+    border-top: solid 3px #f50136;
+    left: 0;
+    top: 0;
+  }
+
+  
+.copyright_footer {
+  background-color: #080113;
+  padding: 15px;
+  text-align: center;
+}
+
+.copyright_footer p {
+  font-size: 13px;
+  padding: 10px;
+  text-transform: capitalize;
+  color: #ffffff;
+}
+
+
+#box{
+  display: flex;
+  display: -webkit-flex;
+  justify-content : space-around;
+  width: 100%;
+  align-items:center;
+  // justify-content:center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width:80%;
+  margin:80px auto;
+}
+
+.item{
+  margin:10px;
+}

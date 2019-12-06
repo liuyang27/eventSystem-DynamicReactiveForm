@@ -14,7 +14,7 @@ export class EventdetailComponent implements OnInit {
   eventdata=null;
 
   eventStartTime:string;
-
+  counterid;
  
 
   constructor(private activeRoute:ActivatedRoute,
@@ -29,12 +29,18 @@ ngOnInit() {
     
   }
 
+  ngOnDestroy(){
+    if(this.counterid){
+      clearInterval(this.counterid);
+    }
+  }
+
   getEvent(id){
     this.eventService.getEventById(id).subscribe((data)=>{
       console.log(data.results);
       this.eventdata = data.results;
       this.eventStartTime=this.getEventTime(this.eventdata);
-      setInterval(() => { this.update(this.eventStartTime) }, 1000);
+      this.counterid=setInterval(() => { this.update(this.eventStartTime) }, 1000);
     })
   }
 
@@ -69,15 +75,24 @@ update(eventStartTime) {
   var eventDate:any = new Date(eventStartTime);
   var differenceDate = eventDate - currentDate;
   
+ 
   timer.days = document.querySelectorAll(".days .timer__number")[0];
   timer.hours = document.querySelectorAll(".hours .timer__number")[0];
   timer.minutes = document.querySelectorAll(".minutes .timer__number")[0];
   timer.seconds = document.querySelectorAll(".seconds .timer__number")[0];
 
-  timer.days.innerHTML = this.getTimeRemaining(differenceDate,86400000, 1);
-  timer.hours.innerHTML = this.getTimeRemaining(differenceDate,3600000, 24);
-  timer.minutes.innerHTML = this.getTimeRemaining(differenceDate,60000, 60);
-  timer.seconds.innerHTML = this.getTimeRemaining(differenceDate,1000, 60);
+  if(differenceDate>0){
+    timer.days.innerHTML = this.getTimeRemaining(differenceDate,86400000, 1);
+    timer.hours.innerHTML = this.getTimeRemaining(differenceDate,3600000, 24);
+    timer.minutes.innerHTML = this.getTimeRemaining(differenceDate,60000, 60);
+    timer.seconds.innerHTML = this.getTimeRemaining(differenceDate,1000, 60);
+  }else{
+    timer.days.innerHTML = "00";
+    timer.hours.innerHTML = "00";
+    timer.minutes.innerHTML = "00";
+    timer.seconds.innerHTML = "00";
+  }
+
 }
 
 

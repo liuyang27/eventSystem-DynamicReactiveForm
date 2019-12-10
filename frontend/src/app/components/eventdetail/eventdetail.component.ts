@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../services/event.service';
-import { trigger,state,style,animate,transition,query,stagger,keyframes} from '@angular/animations';
+import { trigger,state,style,animate,transition,query,stagger} from '@angular/animations';
+
 
 @Component({
   selector: 'app-eventdetail',
@@ -18,6 +19,16 @@ import { trigger,state,style,animate,transition,query,stagger,keyframes} from '@
         ], { optional: true })
       ])
     ]),
+    trigger('mouseHover',[
+      state('true',style({
+        width: '300px',
+        height: '70px',
+      })),
+      transition('* => true',[
+       animate('0.1s ease-out')
+      ]),
+    
+    ])
   ],
 })
 export class EventdetailComponent implements OnInit {
@@ -28,6 +39,8 @@ export class EventdetailComponent implements OnInit {
   eventStartTime:string;
   counterid;
  
+  mouseOnbtn:boolean=false;
+
 
   constructor(private activeRoute:ActivatedRoute,
               private eventService:EventService) { }
@@ -49,7 +62,7 @@ ngOnInit() {
 
   getEvent(id){
     this.eventService.getEventById(id).subscribe((data)=>{
-      console.log(data.results);
+      // console.log(data.results);
       this.eventdata = data.results;
       this.eventStartTime=this.getEventTime(this.eventdata);
       this.counterid=setInterval(() => { this.update(this.eventStartTime) }, 1000);
@@ -57,8 +70,9 @@ ngOnInit() {
   }
 
   getEventTime(event){
-    var date:string=event.dateFrom;
+
     var timing:string=event.timingFrom;
+    var date:Date=new Date(event.dateFrom);
 
     var splitTiming=timing.split(" ")[0];
     var unit=timing.split(" ")[1];
@@ -73,7 +87,7 @@ ngOnInit() {
       hour="0"+hour;
     }
   
-    return date.substr(0,11)+hour+":"+min+":00"
+    return date.toLocaleDateString("en-CA")+"T"+hour+":"+min+":00"
   }
 
 
@@ -104,9 +118,6 @@ update(eventStartTime) {
     timer.minutes.innerHTML = "00";
     timer.seconds.innerHTML = "00";
   }
-  console.log(eventDate)
-  console.log(currentDate)
-  // console.log("countdown time:"+differenceDate)
 
 }
 

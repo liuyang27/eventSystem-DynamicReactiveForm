@@ -46,6 +46,7 @@ export class AddeventComponent implements OnInit  {
 
   dateStartChange(event){
     this.minDateEnd=new Date(event.targetElement.value)
+   
   }
   dateEndChange(event){
     this.maxDateStart=new Date(event.targetElement.value)

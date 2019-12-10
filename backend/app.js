@@ -11,8 +11,9 @@ var mainCtrl = require("./controllers/mainCtrl.js");
 var app=express();
 app.use(cors())
 
-mongoose.connect('mongodb://localhost:27017/RegisterSystem');
+// mongoose.connect('mongodb://localhost:27017/RegisterSystem');
 // mongoose.connect("mongodb+srv://binny_01:binny01@cluster0-ziirr.gcp.mongodb.net/EventManagementSystem?retryWrites=true&w=majority");
+mongoose.connect('mongodb://192.168.0.55:27017/EventManagementSystem');
 
 // app.use(session({
 //     secret: 'liuyang',

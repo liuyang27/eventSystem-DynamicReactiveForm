@@ -101,8 +101,9 @@
 
   .cover-content{
     margin-top: 100px;
-    opacity:0.3;
-    background-color: #777777;
+    // opacity:0.1;
+    // background-color: #777777;
+    background: rgba(0, 0, 0, 0.2); 
     height: 400px;
     width: 100%;
     display: inline-block;
@@ -111,10 +112,34 @@
 
   .cover-title{
     opacity: 1;
-    -webkit-transform: translateY(0px);
-    transform: translateY(0px);
-    -webkit-transition: all 0.4s 300ms ease-in-out;
-    transition: all 0.4s 300ms ease-in-out;
+    font-size: 200%;
+    color: #ffffff;
+    // -webkit-transform: translateY(0px);
+    // transform: translateY(0px);
+    // -webkit-transition: all 1s 300ms ease-in-out;
+    // transition: all 1s 300ms ease-in-out;
+  }
+
+  .cover-eventformat{
+    opacity: 1;
+    font-size: 400%;
+    color:#f50167;
+  }
+
+  .cover-date{
+    opacity: 1;
+    font-size: 150%;
+    color: #ffffff;
+  }
+  .btn-rounded{
+    opacity: 1;
+    font-size: 200%;
+    color: #ffffff;
+    border-radius: 50px;
+    background-color: #f50167;
+    border: solid 1px black;
+    width:280px;
+    height:60px;
   }
 
   .event_table{
@@ -124,7 +149,7 @@
     width:100%;
   }
   tr div{
-    min-width:100px;
+    min-width:80px;
     display: inline-block;
   }
 
@@ -137,7 +162,7 @@
     padding:0px;
   }
   .icon{
-    font-size:100px;
+    font-size:80px;
   }
  
   .section_title {

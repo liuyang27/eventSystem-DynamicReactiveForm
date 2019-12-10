@@ -1,17 +1,15 @@
 <div *ngIf="eventdata">
 
     <div class="cover" style="background-image: url('assets/img/bg/slider.png');">
-        <div class="cover-content" >
-            <h2 class="cover-title">
+        <div class="cover-content" @fadIn>
+            <h2 class="cover-title showText">
                 Prepare yourself for the
             </h2>
-            <strong class="cover-xl-text">{{eventdata.eventformat}}</strong>
-            <p class="cover-date" >
+            <strong class="cover-eventformat showText">{{eventdata.eventformat}}</strong>
+            <p class="cover-date showText" >
                 {{eventdata.dateFrom | date:'d MMM' }} - {{eventdata.dateTo | date:'d MMM y'}}  - {{eventdata.venue}}
             </p>
-            <a href="#" class=" btn btn-primary btn-rounded" >
-                Register Now
-            </a>
+            <button mat-stroked-button class="btn-rounded showText" (click)="register()">Register Now</button>
         </div>
     </div>
 

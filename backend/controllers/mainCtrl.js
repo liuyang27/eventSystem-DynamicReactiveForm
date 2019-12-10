@@ -133,6 +133,7 @@ exports.sendEmail=function(req,res){
 exports.doAddEvent=function(req,res){
   var form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files) {
+    console.log("------------------------ADD EVENT-----------------------------")
     console.log(fields);
     var e= new Event(fields);
     e.save(function(err){

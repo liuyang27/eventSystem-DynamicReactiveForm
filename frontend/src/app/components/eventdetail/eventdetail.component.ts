@@ -1,15 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../services/event.service';
-
+import { trigger,state,style,animate,transition,query,stagger,keyframes} from '@angular/animations';
 
 @Component({
   selector: 'app-eventdetail',
   templateUrl: './eventdetail.component.html',
-  styleUrls: ['./eventdetail.component.scss']
+  styleUrls: ['./eventdetail.component.scss'],
+  animations: [
+    trigger('fadIn',[
+      transition(':enter', [
+        query('.showText',[
+          style({opacity: 0,transform: 'translateY(-20px)' }),
+          stagger(300,[
+            animate('0.5s 1s ease-out', style({ opacity: 1, transform: 'translateY(0px)' })),
+          ])
+        ], { optional: true })
+      ])
+    ]),
+  ],
 })
 export class EventdetailComponent implements OnInit {
-
+ 
   eventId:string;
   eventdata=null;
 
@@ -92,6 +104,9 @@ update(eventStartTime) {
     timer.minutes.innerHTML = "00";
     timer.seconds.innerHTML = "00";
   }
+  console.log(eventDate)
+  console.log(currentDate)
+  // console.log("countdown time:"+differenceDate)
 
 }
 
@@ -115,6 +130,10 @@ getTimeRemaining(difference, timeUnit, divisor ) {
   return n;
 }
 
+
+register(){
+  alert(this.eventId);
+}
 
 
 

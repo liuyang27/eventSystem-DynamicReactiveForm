@@ -12,13 +12,16 @@ import { ReactiveFormsModule } from '@angular/forms'
 
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { EventdetailComponent } from './components/eventdetail/eventdetail.component';
+import { CheckinComponent } from './components/checkin/checkin.component';
+import { NgQrScannerModule } from 'angular2-qrscanner';
 
 @NgModule({
   declarations: [
     AppComponent,
     EventComponent,
     AddeventComponent,
-    EventdetailComponent
+    EventdetailComponent,
+    CheckinComponent
   ],
   imports: [
     BrowserModule,
@@ -26,10 +29,12 @@ import { EventdetailComponent } from './components/eventdetail/eventdetail.compo
     HttpClientModule,
     MaterialModule,
     ReactiveFormsModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    NgQrScannerModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[]
 })
 
 

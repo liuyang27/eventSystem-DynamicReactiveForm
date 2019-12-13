@@ -7,11 +7,11 @@ const nodemailer = require("nodemailer");
 // const fs = require('fs');
 var Event = require("../models/Event");
 
-const mydict={
-    "1":"Year One",
-    "2":"Year Two",
-    "3":"Year Three",
-};
+// const mydict={
+//     "1":"Year One",
+//     "2":"Year Two",
+//     "3":"Year Three",
+// };
 // exports.showIndex=function(req,res){
 //     console.log("showIndex function...........")
 //     Course.find({},function(err,results){

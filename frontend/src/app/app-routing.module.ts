@@ -3,11 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { EventComponent } from './components/event/event.component';
 import { AddeventComponent } from './components/addevent/addevent.component';
 import { EventdetailComponent } from './components/eventdetail/eventdetail.component';
+import { CheckinComponent } from './components/checkin/checkin.component';
 
 const routes: Routes = [
   { path: '', component: EventComponent },
   { path: 'addevent', component: AddeventComponent },
   { path: 'event/:eid', component: EventdetailComponent },
+  { path: 'event/:eid/checkin', component: CheckinComponent },
+  { path: '**',  redirectTo: '',pathMatch: 'full' }
 ];
 
 @NgModule({

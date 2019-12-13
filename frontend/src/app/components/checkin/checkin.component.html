@@ -1,0 +1,22 @@
+
+<mat-card class="card" >
+    <mat-card-header class="card-header" *ngIf="eventdata">
+      <mat-card-title style="font-size:3.5vw;">{{eventdata.name}}</mat-card-title>
+      <mat-card-subtitle style="font-size:3vw;">Scan QR Code to check in</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+     
+    <qr-scanner #scannerArea
+    [debug]="false"
+    [canvasWidth]="1080" 
+    [canvasHeight]="720" 
+    [stopAfterScan]="true" 
+    [updateTime]="1000">
+    </qr-scanner>
+     
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button>LIKE</button>
+      <button mat-button>SHARE</button>
+    </mat-card-actions>
+  </mat-card>

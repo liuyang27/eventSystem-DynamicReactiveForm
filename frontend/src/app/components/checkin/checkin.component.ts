@@ -18,6 +18,8 @@ export class CheckinComponent implements OnInit {
   eventId: string;
   eventdata = null;
 
+  dualCamera=false;
+
   constructor(private activeRoute: ActivatedRoute,
     private eventService: EventService) { }
 
@@ -34,7 +36,13 @@ export class CheckinComponent implements OnInit {
                 this.videoDevices.push(device);
               }
             }
-  
+
+            if (this.videoDevices.length > 1) {
+              this.dualCamera=true;
+            }else{
+              this.dualCamera=false;
+            }
+
             if (this.videoDevices.length > 0) {
               let choosenDev;
               for (const dev of this.videoDevices) {
@@ -55,26 +63,29 @@ export class CheckinComponent implements OnInit {
 
           this.qrScannerComponent.capturedQr.subscribe(result => {
             console.log(result);
+            console.log(this.eventId);
+            console.log("send to server....")
+            this.eventService.checkin("5dee0c22bebf9530983aa2af","5df069f0326f002bacabc137").subscribe((data) => {
+              console.log(data)
+            })
 
             this.qrScannerComponent.startScanning(this.selectedvideoDevice);
           })
         }
 
-       
-
-
-
       })
-
-
-
-
-     
-
-      
     })
   }
 
+
+  flipCamera(){
+    if(this.selectedvideoDevice == this.videoDevices[1]){
+      this.selectedvideoDevice = this.videoDevices[0]
+    }else{
+      this.selectedvideoDevice == this.videoDevices[1]
+    }
+    this.qrScannerComponent.chooseCamera.next(this.selectedvideoDevice);
+  }
 
 
 }

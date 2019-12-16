@@ -23,4 +23,14 @@ export class EventService {
     return res;
   }
 
+  checkin(eid,qrcode):Observable<any>{
+    let body = {
+      eid: eid,
+      qrcode: qrcode,
+    };
+    // var res = this.http.post("http://localhost:3000/checkin/",body,{params:{eid:eid,code:qrcode}});
+    var res = this.http.post("http://localhost:3000/checkin/",body);
+    return res;
+  }
+
 }

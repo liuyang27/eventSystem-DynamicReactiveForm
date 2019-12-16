@@ -6,6 +6,7 @@ var Course=require("../models/Course");
 const nodemailer = require("nodemailer");
 // const fs = require('fs');
 var Event = require("../models/Event");
+var UserEvent = require("../models/UserEvent");
 
 // const mydict={
 //     "1":"Year One",
@@ -151,6 +152,47 @@ exports.doAddEvent=function(req,res){
 		// 	res.json({"results":results});
 		// });	
 	})
+}
+
+
+exports.checkin=function(req,res){
+  console.log("==============check in=================")
+  // console.log(req.query);
+  console.log("body:"+req.body);
+  eid=req.body.eid;
+  qrcode=req.body.qrcode;
+
+  UserEvent.find({"_id":qrcode,"EventId":eid},function(err,results){
+    console.log("err:"+err)
+    console.log("results:"+results)
+    if(err){
+      res.json({"results":"-1"}); //qrcode invalid
+      return;
+    }
+    if(results.length==0){
+      res.json({"results":"-2"}); //eventId invalid
+      return;
+    }
+
+    results = results.map(element =>({
+        "_id" : element._id, 
+        "PreEventSurvey" : element.PreEventSurvey, 
+        "PostEventSurvey"  : element.PostEventSurvey,
+        "EventId"  : element.EventId, 
+        "UserId"  : element.UserId, 
+        "Attendance" : element.Attendance, 
+        "__v" : element.__v
+    }) );
+
+    console.log(results)
+    if(results[0].Attendance.length>0){
+      res.json({"results":"2"});  
+    }
+    else{
+      res.json({"results":"1"});  //first time checkin
+    }
+    // res.json({"results":results});  
+  })
 }
 
 

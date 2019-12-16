@@ -2,6 +2,7 @@ var express=require("express");
 var mongoose =require("mongoose");
 var cors = require('cors')
 // var session = require('express-session')
+var bodyParser = require('body-parser')
 
 // var adminCtrl = require("./controllers/adminCtrl.js");
 // var adminStudentCtrl = require("./controllers/adminStudentCtrl.js");
@@ -10,10 +11,12 @@ var mainCtrl = require("./controllers/mainCtrl.js");
 
 var app=express();
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-mongoose.connect('mongodb://localhost:27017/RegisterSystem');
+// mongoose.connect('mongodb://localhost:27017/RegisterSystem');
 // mongoose.connect("mongodb+srv://binny_01:binny01@cluster0-ziirr.gcp.mongodb.net/EventManagementSystem?retryWrites=true&w=majority");
-// mongoose.connect('mongodb://192.168.0.55:27017/EventManagementSystem');
+mongoose.connect('mongodb://192.168.0.54/EventManagementSystem');
 
 // app.use(session({
 //     secret: 'liuyang',
@@ -65,6 +68,8 @@ app.get("/sendemail",                  mainCtrl.sendEmail)
 app.post("/event",                     mainCtrl.doAddEvent)
 app.delete("/event/:eid",              mainCtrl.doDeleteEvent)
 app.get("/event/:eid",                 mainCtrl.getEventDetail)
+app.post("/checkin",                   mainCtrl.checkin)
+
 
 app.use(express.static("public"));
 

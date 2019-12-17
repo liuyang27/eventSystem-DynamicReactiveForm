@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../services/event.service';
 import { QrScannerComponent } from 'angular2-qrscanner';
+import { NgxSpinnerService } from "ngx-spinner";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-checkin',
@@ -17,11 +19,16 @@ export class CheckinComponent implements OnInit {
 
   eventId: string;
   eventdata = null;
+  dualCamera = false;
 
-  dualCamera=false;
+  imageWidth = 640;
+  imageHeight = 480;
+  video;
 
   constructor(private activeRoute: ActivatedRoute,
-    private eventService: EventService) { }
+    private eventService: EventService,
+    private spinner: NgxSpinnerService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.activeRoute.paramMap.subscribe(params => {
@@ -29,7 +36,7 @@ export class CheckinComponent implements OnInit {
       this.eventService.getEventById(this.eventId).subscribe((data) => {
         this.eventdata = data.results;
 
-        if(this.eventdata != '-1'){
+        if (this.eventdata != '-1') {
           this.qrScannerComponent.getMediaDevices().then(devices => {
             for (const device of devices) {
               if (device.kind.toString() === 'videoinput') {
@@ -38,9 +45,9 @@ export class CheckinComponent implements OnInit {
             }
 
             if (this.videoDevices.length > 1) {
-              this.dualCamera=true;
-            }else{
-              this.dualCamera=false;
+              this.dualCamera = true;
+            } else {
+              this.dualCamera = false;
             }
 
             if (this.videoDevices.length > 0) {
@@ -58,15 +65,42 @@ export class CheckinComponent implements OnInit {
                 this.qrScannerComponent.chooseCamera.next(this.videoDevices[0]);
                 this.selectedvideoDevice = this.videoDevices[0];
               }
+
+              this.video = document.querySelectorAll('video')
+              this.imageHeight = this.video[0].scrollHeight;
+              this.imageWidth = this.video[0].scrollWidth;
             }
           });
 
           this.qrScannerComponent.capturedQr.subscribe(result => {
-            console.log(result);
-            console.log(this.eventId);
-            console.log("send to server....")
-            this.eventService.checkin("5dee0c22bebf9530983aa2af","5df069f0326f002bacabc137").subscribe((data) => {
-              console.log(data)
+            this.spinner.show();
+            //decript....
+
+            setTimeout(() => {
+              /** spinner ends after 5 seconds */
+              this.spinner.hide();
+            }, 5000);
+
+            this.eventService.checkin("5def645deda49811e449789d", "5dee0d9abebf9530983aa2b0").subscribe((data)=>{
+
+              this.spinner.hide();
+   
+              if (data.results == -1) {             //qrcode invalid
+                this.openSnackBar("qrcode invalid,please scan again")
+              } else if (data.results == -2) {       //eventId invalid
+                this.openSnackBar("event invalid,please scan again")
+              } else if (data.results == -3) {       //MongoDB update error
+                this.openSnackBar("database error")
+              } else if (data.results == 1) {        //first time checkin
+                this.openSnackBar("Welcome "+data.username)
+                //print.....
+
+
+
+              } else {
+                this.openSnackBar("Welcome back "+data.username)
+              }
+
             })
 
             this.qrScannerComponent.startScanning(this.selectedvideoDevice);
@@ -78,13 +112,20 @@ export class CheckinComponent implements OnInit {
   }
 
 
-  flipCamera(){
-    if(this.selectedvideoDevice == this.videoDevices[1]){
+  flipCamera() {
+    if (this.selectedvideoDevice == this.videoDevices[1]) {
       this.selectedvideoDevice = this.videoDevices[0]
-    }else{
+    } else {
       this.selectedvideoDevice == this.videoDevices[1]
     }
     this.qrScannerComponent.chooseCamera.next(this.selectedvideoDevice);
+  }
+
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, null, {
+      duration: 2000,
+    });
   }
 
 

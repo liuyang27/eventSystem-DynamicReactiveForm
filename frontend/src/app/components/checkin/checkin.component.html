@@ -1,3 +1,13 @@
+<ngx-spinner
+bdOpacity = 0.2
+bdColor = "#333"
+size = "large"
+color = "#fff"
+type = "square-jelly-box"
+[fullScreen] = "true"
+>
+<p style="color: white" > Please wait... </p>
+</ngx-spinner>
 
 <mat-card class="card" >
     <mat-card-header class="card-header" *ngIf="eventdata">
@@ -9,8 +19,8 @@
     <div class="cameraImg">
       <qr-scanner #scannerArea 
         [debug]="false"
-        [canvasWidth]="1080" 
-        [canvasHeight]="720" 
+        [canvasWidth]="imageWidth" 
+        [canvasHeight]="imageHeight"
         [stopAfterScan]="true" 
         [updateTime]="500">
       </qr-scanner>
@@ -21,3 +31,5 @@
       <mat-icon class="icon" (click)="flipCamera()" *ngIf="dualCamera">flip_camera_ios</mat-icon>
     </mat-card-actions>
   </mat-card>
+
+ 

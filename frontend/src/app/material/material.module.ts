@@ -16,6 +16,7 @@ import {MatChipsModule} from '@angular/material/chips'
 import {MatIconModule} from '@angular/material/icon';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 const MaterialComponents =[
   MatInputModule,
@@ -33,7 +34,8 @@ const MaterialComponents =[
   MatChipsModule,
   MatIconModule,
   MatSlideToggleModule,
-  MatGridListModule
+  MatGridListModule,
+  MatSnackBarModule
 ];
 
 @NgModule({

@@ -14,6 +14,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { EventdetailComponent } from './components/eventdetail/eventdetail.component';
 import { CheckinComponent } from './components/checkin/checkin.component';
 import { NgQrScannerModule } from 'angular2-qrscanner';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NgQrScannerModule } from 'angular2-qrscanner';
     MaterialModule,
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
-    NgQrScannerModule
+    NgQrScannerModule,
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -7,6 +7,7 @@ const nodemailer = require("nodemailer");
 // const fs = require('fs');
 var Event = require("../models/Event");
 var UserEvent = require("../models/UserEvent");
+var User=require("../models/User");
 
 // const mydict={
 //     "1":"Year One",
@@ -156,43 +157,41 @@ exports.doAddEvent=function(req,res){
 
 
 exports.checkin=function(req,res){
-  console.log("==============check in=================")
-  // console.log(req.query);
-  console.log("body:"+req.body);
+  console.log("==============user check in=================")
+
   eid=req.body.eid;
   qrcode=req.body.qrcode;
 
-  UserEvent.find({"_id":qrcode,"EventId":eid},function(err,results){
-    console.log("err:"+err)
-    console.log("results:"+results)
-    if(err){
-      res.json({"results":"-1"}); //qrcode invalid
-      return;
-    }
-    if(results.length==0){
-      res.json({"results":"-2"}); //eventId invalid
-      return;
+  UserEvent.validationCheck(eid,qrcode,function(results){
+
+    if(results.code<0){   
+      console.log(results.code);        
+      res.json({"results":results.code,"username":null}); 
+
+    }else{
+      var d = new Date();
+      UserEvent.findByIdAndUpdate(qrcode,{$push:{Attendance:d}},function(err,response){
+        if(err){
+          console.log(results.code);   
+          res.json({"results":-3,"username":null});     //update mongoDB fail 
+          return;
+        }
+  
+        User.findById(results.user[0].UserId,function(error,data){
+          if(error){
+            console.log(results.code);   
+            res.json({"results":-3,"username":null});     //update mongoDB fail 
+            return;
+          }
+          console.log(results.code);  
+          res.json({"results":results.code,"username":data.Name});   //check-in ok
+        })
+      })
     }
 
-    results = results.map(element =>({
-        "_id" : element._id, 
-        "PreEventSurvey" : element.PreEventSurvey, 
-        "PostEventSurvey"  : element.PostEventSurvey,
-        "EventId"  : element.EventId, 
-        "UserId"  : element.UserId, 
-        "Attendance" : element.Attendance, 
-        "__v" : element.__v
-    }) );
 
-    console.log(results)
-    if(results[0].Attendance.length>0){
-      res.json({"results":"2"});  
-    }
-    else{
-      res.json({"results":"1"});  //first time checkin
-    }
-    // res.json({"results":results});  
   })
+
 }
 
 

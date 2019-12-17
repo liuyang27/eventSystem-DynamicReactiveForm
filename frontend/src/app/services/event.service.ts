@@ -23,7 +23,7 @@ export class EventService {
     return res;
   }
 
-  checkin(eid,qrcode):Observable<any>{
+  checkin(qrcode,eid):Observable<any>{
     let body = {
       eid: eid,
       qrcode: qrcode,

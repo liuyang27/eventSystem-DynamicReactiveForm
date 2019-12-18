@@ -15,6 +15,7 @@ import { EventdetailComponent } from './components/eventdetail/eventdetail.compo
 import { CheckinComponent } from './components/checkin/checkin.component';
 import { NgQrScannerModule } from 'angular2-qrscanner';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { CheckindialogComponent } from './components/checkindialog/checkindialog.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
     EventComponent,
     AddeventComponent,
     EventdetailComponent,
-    CheckinComponent
+    CheckinComponent,
+    CheckindialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents:[]
+  entryComponents:[CheckindialogComponent]
 })
 
 

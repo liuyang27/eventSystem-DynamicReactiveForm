@@ -3,7 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../services/event.service';
 import { QrScannerComponent } from 'angular2-qrscanner';
 import { NgxSpinnerService } from "ngx-spinner";
-import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { MatDialog } from '@angular/material/dialog';
+import { CheckindialogComponent } from '../checkindialog/checkindialog.component';
+import * as CryptoJS from "crypto-js";
 
 @Component({
   selector: 'app-checkin',
@@ -20,15 +23,14 @@ export class CheckinComponent implements OnInit {
   eventId: string;
   eventdata = null;
   dualCamera = false;
+  dialogRef: any;
 
-  imageWidth = 640;
-  imageHeight = 480;
-  video;
 
   constructor(private activeRoute: ActivatedRoute,
     private eventService: EventService,
     private spinner: NgxSpinnerService,
-    private _snackBar: MatSnackBar) { }
+    public dialog: MatDialog) { }
+  
 
   ngOnInit() {
     this.activeRoute.paramMap.subscribe(params => {
@@ -66,44 +68,27 @@ export class CheckinComponent implements OnInit {
                 this.selectedvideoDevice = this.videoDevices[0];
               }
 
-              this.video = document.querySelectorAll('video')
-              this.imageHeight = this.video[0].scrollHeight;
-              this.imageWidth = this.video[0].scrollWidth;
             }
           });
 
           this.qrScannerComponent.capturedQr.subscribe(result => {
             this.spinner.show();
-            //decript....
+            var bytes  = CryptoJS.AES.decrypt(result.toString(), 'secret key 123');
+            var decyptedQRcode = bytes.toString(CryptoJS.enc.Utf8);   
 
             setTimeout(() => {
               /** spinner ends after 5 seconds */
               this.spinner.hide();
             }, 5000);
 
-            this.eventService.checkin("5def645deda49811e449789d", "5dee0d9abebf9530983aa2b0").subscribe((data)=>{
-
+            this.eventService.checkin(decyptedQRcode, this.eventId).subscribe((data) => {
               this.spinner.hide();
-   
-              if (data.results == -1) {             //qrcode invalid
-                this.openSnackBar("qrcode invalid,please scan again")
-              } else if (data.results == -2) {       //eventId invalid
-                this.openSnackBar("event invalid,please scan again")
-              } else if (data.results == -3) {       //MongoDB update error
-                this.openSnackBar("database error")
-              } else if (data.results == 1) {        //first time checkin
-                this.openSnackBar("Welcome "+data.username)
-                //print.....
+              var canvas = document.querySelectorAll('canvas')
+              canvas[0].style.display = 'none'
 
-
-
-              } else {
-                this.openSnackBar("Welcome back "+data.username)
-              }
-
+              this.openDialog(data.results,data.username);
             })
 
-            this.qrScannerComponent.startScanning(this.selectedvideoDevice);
           })
         }
 
@@ -121,12 +106,16 @@ export class CheckinComponent implements OnInit {
     this.qrScannerComponent.chooseCamera.next(this.selectedvideoDevice);
   }
 
-
-  openSnackBar(message: string) {
-    this._snackBar.open(message, null, {
-      duration: 2000,
+  openDialog(code,username): void {
+    this.dialogRef = this.dialog.open(CheckindialogComponent, {
+      height: '60%',
+      width: '80%',
+      data: {code: code, username: username}
     });
+    setTimeout(() => {
+      this.dialogRef.close();
+      this.qrScannerComponent.startScanning(this.selectedvideoDevice);
+    }, 1000);
   }
-
 
 }

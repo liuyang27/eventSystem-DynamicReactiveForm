@@ -19,8 +19,8 @@ type = "square-jelly-box"
     <div class="cameraImg">
       <qr-scanner #scannerArea 
         [debug]="false"
-        [canvasWidth]="imageWidth" 
-        [canvasHeight]="imageHeight"
+        [canvasWidth]="640" 
+        [canvasHeight]="480"
         [stopAfterScan]="true" 
         [updateTime]="500">
       </qr-scanner>
@@ -31,5 +31,7 @@ type = "square-jelly-box"
       <mat-icon class="icon" (click)="flipCamera()" *ngIf="dualCamera">flip_camera_ios</mat-icon>
     </mat-card-actions>
   </mat-card>
+
+
 
  

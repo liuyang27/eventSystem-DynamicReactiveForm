@@ -1,0 +1,30 @@
+<div style="text-align:center">
+    <div *ngIf="data.code>0" >
+        <mat-icon class="icon ion_color_green">check_circle</mat-icon>
+    </div>
+    <p *ngIf="data.code==-1 || data.code==-2">
+        <mat-icon class="icon ion_color_red">indeterminate_check_box</mat-icon>
+    </p>
+    <p *ngIf="data.code==-3">
+        <mat-icon class="icon ion_color_yellow">report_problem</mat-icon>
+    </p>
+</div>
+
+
+
+<p *ngIf="data.code>0" style="text-align:center;font-size: 5vh;font-weight: bolder">
+    Welcome
+</p>
+<p *ngIf="data.code>0" style="text-align:center;font-size: 4vh">
+    {{data.username}}
+</p>
+
+<h1 *ngIf="data.code==-1 || data.code==-2" style="text-align:center">
+    <br><br>
+    Invalid, please scan again...
+</h1>
+
+<h1 *ngIf="data.code==-3" style="text-align:center">
+    <br><br>
+    Database error...
+</h1>

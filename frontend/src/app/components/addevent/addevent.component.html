@@ -122,7 +122,7 @@
                     <mat-card-content>
                             <p> 
                                 <mat-checkbox formControlName="optional">Optional</mat-checkbox>
-                                <mat-checkbox formControlName="print" style="margin-left:50px">Print on ticket</mat-checkbox>
+                                <mat-checkbox formControlName="print" style="margin-left:50px"  (change)="changePrint(item)">Print on ticket</mat-checkbox>
                             </p>
                             <p>
                                 <mat-label>Question:</mat-label>
@@ -145,23 +145,33 @@
                                 <input matInput placeholder="Maximum choices" type="number" formControlName="maxChoice" min="1">
                                 </mat-form-field>
                             </p>
-                            <div formArrayName="options" *ngFor="let option of item.get('options').controls; let optionIndex = index;">
-                                <p>
-                                    <mat-radio-button *ngIf="item.value.type=='RadioButton'" disabled></mat-radio-button>
-                                    <mat-checkbox *ngIf="item.value.type=='CheckBox'" disabled></mat-checkbox>
-                                    <mat-label *ngIf="item.value.type=='DropdownList'"><b>{{optionIndex}}. </b></mat-label>
+                            <div *ngFor="let option of item.get('options').controls; let optionIndex = index;" >   
+                                <div style="display: inline-flex" >
+                                <div formArrayName="options">
+                                    <!-- <p> -->
+                                        <mat-radio-button *ngIf="item.value.type=='RadioButton'" disabled></mat-radio-button>
+                                        <mat-checkbox *ngIf="item.value.type=='CheckBox'" disabled></mat-checkbox>
+                                        <mat-label *ngIf="item.value.type=='DropdownList'"><b>{{optionIndex}}. </b></mat-label>
 
-                                    <span *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">
-                                        <mat-form-field style="margin-left:10px" >    
-                                        <input matInput placeholder="option {{optionIndex+1}}" class="example-full-width" [formControlName]="optionIndex" required>
-                                        </mat-form-field>
-                                        <button mat-stroked-button color="warn" (click)="removeOption(item,optionIndex)" style="margin-left:5px">Remove</button>
-                                    </span>
-                                </p>                           
-                            </div>
-                            <p>
+                                        <span *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">
+                                            <mat-form-field style="margin-left:10px" >    
+                                            <input matInput placeholder="option {{optionIndex+1}}" class="example-full-width" [formControlName]="optionIndex" >
+                                            </mat-form-field>
+                                            <!-- <button mat-stroked-button color="warn" (click)="removeOption(item,optionIndex)" style="margin-left:5px">Remove</button>                                         -->
+                                        </span>
+                                    <!-- </p>                            -->
+                                </div>
+                                <div formArrayName="optionsPrint" >
+                                    <mat-form-field style="margin-left:10px" *ngIf="item.value.print">    
+                                        <input matInput placeholder="option {{optionIndex+1}}(short)" class="example-full-width" [formControlName]="optionIndex" required >
+                                    </mat-form-field>           
+                                </div>
+                                <button mat-stroked-button color="warn" (click)="removeOption(item,optionIndex)" style="margin-left:5px;height: 80%">Remove</button>  
+                            </div>  
+                        </div>
+                        <div>
                                 <button mat-flat-button color="primary" (click)="addOption(item);$event.preventDefault()" *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">Add Option</button>
-                            </p>
+                            </div>
                     </mat-card-content>
                 
                 </mat-card>

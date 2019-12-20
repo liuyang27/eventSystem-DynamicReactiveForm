@@ -19,6 +19,7 @@ export class AddeventComponent implements OnInit  {
 
   preEventSurvey: FormArray;
   options: FormArray;
+  optionsPrint: FormArray;
   questionTypes=["Text","RadioButton","CheckBox","DropdownList"];
   eventFormats=["Tradeshows","Conferences","Workshops"];
   
@@ -83,11 +84,14 @@ export class AddeventComponent implements OnInit  {
       question:[],
       type:[],
       options:this.fb.array([]),
+      optionsPrint:this.fb.array([]),
       optional:[false],
       print:[false],
       maxChoice:[]
     });
   }
+  
+
 
   addQuestion(): void {
     this.preEventSurvey = this.eventForm.get('preEventSurvey') as FormArray;
@@ -111,13 +115,21 @@ export class AddeventComponent implements OnInit  {
 
   addOption(item){
     this.options=item.get('options') as FormArray;
-    this.options.push(this.fb.control(null));
+    this.options.push(this.fb.control(null,Validators.required));
+
+    this.optionsPrint=item.get('optionsPrint') as FormArray;
+    this.optionsPrint.push(this.fb.control(null));
 
     this.updateMaxChoice(item);
+
+
+    // item.updateValueAndValidity();
+    // this.eventForm.updateValueAndValidity();
   }
 
   removeOption(item,index){
     (item.controls["options"] as FormArray).removeAt(index);
+    (item.controls["optionsPrint"] as FormArray).removeAt(index);
     this.updateMaxChoice(item);
   }
 
@@ -146,7 +158,14 @@ export class AddeventComponent implements OnInit  {
     }
   }
 
- 
+  changePrint(item){
+    if(item.get("print").value==false){
+      (item.controls['optionsPrint'].controls).forEach(element => {
+        element.setErrors(null);
+      });
+    }
+  }
 
+  
 }
 

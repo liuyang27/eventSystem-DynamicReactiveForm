@@ -16,7 +16,8 @@ var eventSchema=new mongoose.Schema({
     eventformat:String,
     remarks:String,
     registrationEnable:Boolean,
-    preEventSurvey:Array
+    preEventSurvey:Array,
+    postEventSurvey:Array
 });
 
 eventSchema.statics.addEvent=function(json,callback){

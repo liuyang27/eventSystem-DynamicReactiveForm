@@ -18,6 +18,7 @@ export class AddeventComponent implements OnInit  {
   maxDateStart;
 
   preEventSurvey: FormArray;
+  postEventSurvey: FormArray;
   options: FormArray;
   optionsPrint: FormArray;
   questionTypes=["Text","RadioButton","CheckBox","DropdownList"];
@@ -70,42 +71,59 @@ export class AddeventComponent implements OnInit  {
       dateTo:[''],
       timingFrom:['09:00 am'],
       timingTo:['06:30 pm'],
-      preEventSurvey: this.fb.array([]),
       introduction:[],
       category:[],
       organizer:[],
       eventformat:[],
       remarks:[],
-      registrationEnable:['true']
+      registrationEnable:['true'],
+      preEventSurvey: this.fb.array([]),
+      postEventSurvey: this.fb.array([]),
   })
 
-  createQ(): FormGroup {
-    return this.fb.group({
-      question:[],
-      type:[],
-      options:this.fb.array([]),
-      optionsPrint:this.fb.array([]),
-      optional:[false],
-      print:[false],
-      maxChoice:[]
-    });
+  createQ(surveytype): FormGroup {
+    if(surveytype=='pre'){
+      return this.fb.group({
+        question:[],
+        type:[],
+        options:this.fb.array([]),
+        optionsPrint:this.fb.array([]),
+        optional:[false],
+        print:[false],
+        maxChoice:[]
+      });
+    }else{
+      return this.fb.group({
+        question:[],
+        type:[],
+        options:this.fb.array([]),
+        optional:[false],
+        maxChoice:[]
+      });
+    }
   }
-  
 
 
-  addQuestion(): void {
-    this.preEventSurvey = this.eventForm.get('preEventSurvey') as FormArray;
-    this.preEventSurvey.push(this.createQ());
+
+  addQuestion(surveytype): void {
+    if(surveytype=='pre'){
+      this.preEventSurvey = this.eventForm.get('preEventSurvey') as FormArray;
+      this.preEventSurvey.push(this.createQ(surveytype));
+    }else{
+      this.postEventSurvey = this.eventForm.get('postEventSurvey') as FormArray;
+      this.postEventSurvey.push(this.createQ(surveytype));
+    }
+ 
   }
 
-  changeType(type,item){
+  changeType(type,item,surveytype){
      if(type=="Text"){
         (item.get("options") as FormArray).clear();
         this.updateMaxChoice(item);
         // item.patchValue({ maxChoice:1 })
      }else{
         if(item.get("options").value.length<=0){
-            this.addOption(item);
+            this.addOption(item,surveytype);
         }else{
             this.updateMaxChoice(item);
         }
@@ -113,29 +131,34 @@ export class AddeventComponent implements OnInit  {
   }
 
 
-  addOption(item){
-    this.options=item.get('options') as FormArray;
-    this.options.push(this.fb.control(null,Validators.required));
+  addOption(item,surveytype){
+    
+      this.options=item.get('options') as FormArray;
+      this.options.push(this.fb.control(null,Validators.required));
+      if(surveytype=='pre'){
+        this.optionsPrint=item.get('optionsPrint') as FormArray;
+        this.optionsPrint.push(this.fb.control(null));
+      }
+      this.updateMaxChoice(item);
 
-    this.optionsPrint=item.get('optionsPrint') as FormArray;
-    this.optionsPrint.push(this.fb.control(null));
-
-    this.updateMaxChoice(item);
-
-
-    // item.updateValueAndValidity();
-    // this.eventForm.updateValueAndValidity();
   }
 
-  removeOption(item,index){
+  removeOption(item,index,surveytype){
     (item.controls["options"] as FormArray).removeAt(index);
-    (item.controls["optionsPrint"] as FormArray).removeAt(index);
+    if(surveytype=='pre'){
+      (item.controls["optionsPrint"] as FormArray).removeAt(index);
+    }
     this.updateMaxChoice(item);
   }
 
 
-  removeQ(index){
-    this.preEventSurvey.removeAt(index)
+  removeQ(index,surveytype){
+    if(surveytype=='pre'){
+      this.preEventSurvey.removeAt(index)
+    }else{
+      this.postEventSurvey.removeAt(index)
+    }
+    
   }
 
   onSubmit(){

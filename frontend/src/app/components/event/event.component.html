@@ -39,6 +39,7 @@
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="primary" (click)="showDetails(element._id)">Details</button>
+                <button mat-raised-button color="accent" (click)="showEdit(element._id)">Edit</button>
                 <button mat-raised-button color="warn" (click)="onDelete(element._id)">Delete</button>
             </td>
         </ng-container>

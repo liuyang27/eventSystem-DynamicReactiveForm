@@ -1,0 +1,273 @@
+<h2>
+    Edit Event</h2>
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()" *ngIf="eventForm">
+    <div class="example-container">
+
+        <mat-label>Event Name:</mat-label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Name" class="example-full-width" formControlName="name" required>
+        </mat-form-field>
+
+        <mat-label>Venue:</mat-label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Location" class="example-full-width" formControlName="venue" required>
+        </mat-form-field>
+
+        <mat-label>Capacity(0 means unlimit):</mat-label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Capacity" class="example-full-width" type="number" min="0" formControlName="capacity" required>
+        </mat-form-field>
+
+        <mat-label>Entry Fee(0 means free entry):</mat-label>
+        <mat-form-field appearance="outline">
+            <span matPrefix><b>$&nbsp; </b></span>
+            <input matInput placeholder="entry fee" class="example-full-width" type="number" min="0" formControlName="entryFee" required>
+        </mat-form-field>
+
+        <section class="example-section">
+            <mat-radio-group formControlName="eventformat" required>
+                <mat-label>Format:</mat-label>
+                <p *ngFor="let format of eventFormats;let i = index">
+                    <mat-radio-button value="{{format}}">{{format}}</mat-radio-button>
+                </p>
+            </mat-radio-group>
+        </section>
+        <br>
+        <div>
+            <mat-label>Category:</mat-label>
+            <mat-form-field style="margin-left:20px">
+                <mat-select placeholder="select category.." multiple="multiple" formControlName="category" required>
+                    <mat-option *ngFor="let category of eventCategory" value="{{category}}">{{category}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip *ngFor="let category of eventForm.value.category" (removed)="removeCategory(category)" selected>
+                {{category}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+        <br><br>
+
+        <mat-label>Organizer:</mat-label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="organizer" class="example-full-width" formControlName="organizer">
+        </mat-form-field>
+
+
+
+
+
+
+        <mat-label>Date:</mat-label>
+        <p>
+            <span>
+                <mat-label>From:</mat-label>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="startdate" placeholder=" Start date" disabled [min]="minDateStart" [max]="maxDateStart"
+                        formControlName="dateFrom" (dateChange)="dateStartChange($event)" required>
+                    <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
+                    <mat-datepicker #startdate disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </span>
+            <span style="margin-left: 10%">
+                <mat-label>To:</mat-label>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="todate" placeholder=" End date" disabled [min]="minDateEnd" formControlName="dateTo" (dateChange)="dateEndChange($event)"
+                        required>
+                    <mat-datepicker-toggle matSuffix [for]="todate"></mat-datepicker-toggle>
+                    <mat-datepicker #todate disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </span>
+        </p>
+
+        <mat-label>Timing:</mat-label>
+        <p>
+            <span>
+                <mat-label>From:</mat-label>
+                <ngx-timepicker-field [defaultTime]="'09:00 am'" formControlName="timingFrom"></ngx-timepicker-field>
+            </span>
+            <span>
+                <mat-label>To:</mat-label>
+                <ngx-timepicker-field [defaultTime]="'05:00 pm'" formControlName="timingTo"></ngx-timepicker-field>
+            </span>
+
+        </p>
+
+
+        <mat-label>Introduction:</mat-label>
+        <mat-form-field>
+            <textarea matInput placeholder="about this event..." formControlName="introduction"></textarea>
+        </mat-form-field>
+
+        <mat-label>Remarks:</mat-label>
+        <mat-form-field>
+            <textarea matInput placeholder="remarks.." formControlName="remarks"></textarea>
+        </mat-form-field>
+
+        <mat-slide-toggle formControlName="registrationEnable">Open for registration</mat-slide-toggle>
+
+        <br><br>
+
+
+
+        <h4>Add pre-event survey questions (optional)</h4>
+        <div formArrayName="preEventSurvey" *ngFor="let item of eventForm.get('preEventSurvey').controls; let i = index;">
+            <div [formGroupName]="i">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Question {{i+1}}</mat-card-title>
+
+                        <button mat-flat-button color="warn" (click)="removeQ(i,'pre');$event.preventDefault()">Remove this
+                            question
+                        </button>
+                    </mat-card-header>
+
+                    <mat-card-content>
+                        <p>
+                            <mat-checkbox formControlName="optional">Optional</mat-checkbox>
+                            <mat-checkbox formControlName="print" style="margin-left:50px" (change)="changePrint(item)">Print
+                                on ticket</mat-checkbox>
+                        </p>
+                        <p>
+                            <mat-label>Question:</mat-label>
+                            <mat-form-field style="margin-left:5px">
+                                <input matInput placeholder=" your question..." class="example-full-width" formControlName="question" required>
+                            </mat-form-field>
+                        </p>
+                        <P>
+                            <mat-label>Type:</mat-label>
+                            <mat-form-field style="margin-left:5px">
+                                <mat-label>choose a type</mat-label>
+                                <mat-select name="type" formControlName="type" (ngModelChange)="changeType($event,item,'pre')" required>
+                                    <mat-option *ngFor="let type of questionTypes" [value]="type">{{type}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </P>
+                        <p *ngIf="item.value.type=='CheckBox'">
+                            <mat-label>Maximum checkboxes allow to select:</mat-label>
+                            <mat-form-field style="margin-left:10px">
+                                <input matInput placeholder="Maximum choices" type="number" formControlName="maxChoice" min="1">
+                            </mat-form-field>
+                        </p>
+                        <div *ngFor="let option of item.get('options').controls; let optionIndex = index;">
+                            <div style="display: inline-flex">
+                                <div formArrayName="options">
+                                    <mat-radio-button *ngIf="item.value.type=='RadioButton'" disabled></mat-radio-button>
+                                    <mat-checkbox *ngIf="item.value.type=='CheckBox'" disabled></mat-checkbox>
+                                    <mat-label *ngIf="item.value.type=='DropdownList'"><b>{{optionIndex}}. </b></mat-label>
+
+                                    <span *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">
+                                        <mat-form-field style="margin-left:10px">
+                                            <input matInput placeholder="option {{optionIndex+1}}" class="example-full-width" [formControlName]="optionIndex">
+                                        </mat-form-field>
+
+                                    </span>
+
+                                </div>
+                                <div formArrayName="optionsPrint">
+                                    <mat-form-field style="margin-left:10px" *ngIf="item.value.print">
+                                        <input matInput placeholder="option {{optionIndex+1}}(short)" class="example-full-width" [formControlName]="optionIndex"
+                                            required>
+                                    </mat-form-field>
+                                </div>
+                                <button mat-stroked-button color="warn" (click)="removeOption(item,optionIndex,'pre');$event.preventDefault()" style="margin-left:5px;height: 80%">Remove</button>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-flat-button color="primary" (click)="addOption(item,'pre');$event.preventDefault()" *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">Add
+                                Option
+                            </button>
+                        </div>
+                    </mat-card-content>
+
+                </mat-card>
+            </div>
+        </div>
+        <button mat-flat-button color="primary" style="width:30%;margin-top: 10px" (click)="addQuestion('pre');$event.preventDefault()">Add
+            question
+        </button>
+
+        <br><br>
+        <hr><br><br>
+
+
+        <h4>Add post-event survey questions (optional)</h4>
+
+        <div formArrayName="postEventSurvey" *ngFor="let item of eventForm.get('postEventSurvey').controls; let i = index;">
+            <div [formGroupName]="i">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Question {{i+1}}</mat-card-title>
+
+                        <button mat-flat-button color="warn" (click)="removeQ(i,'post');$event.preventDefault()">Remove this
+                            question
+                        </button>
+                    </mat-card-header>
+
+                    <mat-card-content>
+                        <p>
+                            <mat-checkbox formControlName="optional">Optional</mat-checkbox>
+                        </p>
+                        <p>
+                            <mat-label>Question:</mat-label>
+                            <mat-form-field style="margin-left:5px">
+                                <input matInput placeholder=" your question..." class="example-full-width" formControlName="question" required>
+                            </mat-form-field>
+                        </p>
+                        <P>
+                            <mat-label>Type:</mat-label>
+                            <mat-form-field style="margin-left:5px">
+                                <mat-label>choose a type</mat-label>
+                                <mat-select name="type" formControlName="type" (ngModelChange)="changeType($event,item,'post')" required>
+                                    <mat-option *ngFor="let type of questionTypes" [value]="type">{{type}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </P>
+                        <p *ngIf="item.value.type=='CheckBox'">
+                            <mat-label>Maximum checkboxes allow to select:</mat-label>
+                            <mat-form-field style="margin-left:10px">
+                                <input matInput placeholder="Maximum choices" type="number" formControlName="maxChoice" min="1">
+                            </mat-form-field>
+                        </p>
+                        <div *ngFor="let option of item.get('options').controls; let optionIndex = index;">
+                            <div style="display: inline-flex">
+                                <div formArrayName="options">
+                                    <mat-radio-button *ngIf="item.value.type=='RadioButton'" disabled></mat-radio-button>
+                                    <mat-checkbox *ngIf="item.value.type=='CheckBox'" disabled></mat-checkbox>
+                                    <mat-label *ngIf="item.value.type=='DropdownList'"><b>{{optionIndex}}. </b></mat-label>
+
+                                    <span *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">
+                                        <mat-form-field style="margin-left:10px">
+                                            <input matInput placeholder="option {{optionIndex+1}}" class="example-full-width" [formControlName]="optionIndex">
+                                        </mat-form-field>
+                                    </span>
+                                </div>
+
+                                <button mat-stroked-button color="warn" (click)="removeOption(item,optionIndex,'post');$event.preventDefault()" style="margin-left:5px;height: 80%">Remove</button>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-flat-button color="primary" (click)="addOption(item,'post');$event.preventDefault()" *ngIf="item.value.type=='CheckBox' || item.value.type=='RadioButton' || item.value.type=='DropdownList'">Add
+                                Option
+                            </button>
+                        </div>
+                    </mat-card-content>
+
+                </mat-card>
+            </div>
+        </div>
+        <button mat-flat-button color="primary" style="width:30%;margin-top: 10px" (click)="addQuestion('post');$event.preventDefault()">Add
+            question
+        </button>
+
+
+    </div>
+    <br><br> {{eventForm.value | json}}
+    <p>
+        <button mat-flat-button color="primary" style="width:30%;" (click)="backToHome();$event.preventDefault()">Back</button>
+        <button mat-flat-button color="primary" style="width:30%;margin-left: 50px" [disabled]="!eventForm.valid">Save</button>
+    </p>
+    <br><br>
+</form>

@@ -78,6 +78,7 @@ exports.doDeleteEvent=function(req,res){
 }
 
 exports.getEventDetail=function(req,res){
+  console.log("getEventDetail...........")
   var eid=req.params.eid;
   Event.find({"_id":eid},function(err,results){
 		if(err || results.length==0){

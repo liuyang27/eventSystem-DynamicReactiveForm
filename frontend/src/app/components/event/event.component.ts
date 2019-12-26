@@ -39,6 +39,10 @@ export class EventComponent implements OnInit {
     this.router.navigate(['/event',id]);
   }
 
+  showEdit(id){
+    this.router.navigate(['/editevent',id]);
+  }
+
   onDelete(id){
     if(!confirm("Are you sure to delete this event? ")) {
       return;

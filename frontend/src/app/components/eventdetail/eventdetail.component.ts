@@ -4,6 +4,7 @@ import { EventService } from '../../services/event.service';
 import { trigger,state,style,animate,transition,query,stagger} from '@angular/animations';
 
 
+
 @Component({
   selector: 'app-eventdetail',
   templateUrl: './eventdetail.component.html',
@@ -40,6 +41,7 @@ export class EventdetailComponent implements OnInit {
   counterid;
  
   mouseOnbtn:boolean=false;
+  registerEnable:boolean=false;
 
 
   constructor(private activeRoute:ActivatedRoute,
@@ -66,7 +68,21 @@ ngOnInit() {
       this.eventdata = data.results;
       this.eventStartTime=this.getEventTime(this.eventdata);
       this.counterid=setInterval(() => { this.update(this.eventStartTime) }, 1000);
+
+      this.registerEnable=this.eventdata.registrationEnable && this.compareDate(this.eventdata.dateTo)
+
     })
+  }
+
+  compareDate(eventEndDate){
+ 
+    var date_eventEnd:Date=new Date(eventEndDate)
+    date_eventEnd.setHours(0,0,0,0)
+
+    var date_today =new Date()
+    date_today.setHours(0,0,0,0)
+
+    return date_today.getTime() <= date_eventEnd.getTime()
   }
 
   getEventTime(event){

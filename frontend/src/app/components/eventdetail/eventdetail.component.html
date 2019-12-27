@@ -9,7 +9,7 @@
             <p class="cover-date showText" >
                 {{eventdata.dateFrom | date:'d MMM' }} - {{eventdata.dateTo | date:'d MMM y'}}  - {{eventdata.venue}}
             </p>
-            <button mat-stroked-button class="btn-rounded showText" (click)="register()" [@mouseHover]="mouseOnbtn" (mouseenter)="mouseOnbtn=true" (mouseleave)="mouseOnbtn=false">Register Now</button>
+            <button mat-stroked-button class="btn-rounded showText" (click)="register()" [@mouseHover]="mouseOnbtn" (mouseenter)="mouseOnbtn=true" (mouseleave)="mouseOnbtn=false" [style.visibility]="registerEnable? 'visible' : 'hidden'">Register Now</button>
         </div>
     </div>
 

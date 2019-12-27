@@ -13,6 +13,11 @@ export class EventService {
     return this.http.post("http://localhost:3000/event/",event);
   }
 
+  editEvent(eid,event):Observable<any>{
+    var res = this.http.put("http://localhost:3000/event/"+ eid,event);
+    return res;
+  }
+
   deleteEventById(eid):Observable<any>{
     var res = this.http.delete("http://localhost:3000/event/"+eid);
     return res;

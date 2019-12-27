@@ -5,7 +5,7 @@
 
         <mat-label>Event Name:</mat-label>
         <mat-form-field appearance="outline">
-            <input matInput placeholder="Name" class="example-full-width" formControlName="name" required>
+            <input matInput placeholder="Name" class="example-full-width" formControlName="name"  required>
         </mat-form-field>
 
         <mat-label>Venue:</mat-label>
@@ -265,9 +265,9 @@
 
     </div>
     <br><br> {{eventForm.value | json}}
-    <p>
+    <div style="display: flex;justify-content:space-around;">
         <button mat-flat-button color="primary" style="width:30%;" (click)="backToHome();$event.preventDefault()">Back</button>
-        <button mat-flat-button color="primary" style="width:30%;margin-left: 50px" [disabled]="!eventForm.valid">Save</button>
-    </p>
+        <button mat-flat-button color="primary" style="width:30%;" [disabled]="!eventForm.valid">Save</button>
+    </div>
     <br><br>
 </form>

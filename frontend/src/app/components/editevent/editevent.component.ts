@@ -51,9 +51,6 @@ export class EditeventComponent implements OnInit,AfterContentChecked {
     this.eventService.getEventById(id).subscribe((data) => {
       var eventdata = data.results;
 
-      this.minDateStart = new Date();
-      this.minDateEnd = new Date();
-
       this.eventForm = this.fb.group({
         name: [eventdata.name, Validators.required],
         venue: [eventdata.venue],
@@ -187,7 +184,6 @@ export class EditeventComponent implements OnInit,AfterContentChecked {
     if (type == "Text") {
       (item.get("options") as FormArray).clear();
       this.updateMaxChoice(item);
-      // item.patchValue({ maxChoice:1 })
     } else {
       if (item.get("options").value.length <= 0) {
         this.addOption(item, surveytype);
@@ -245,14 +241,15 @@ export class EditeventComponent implements OnInit,AfterContentChecked {
 
   onSubmit(){
     console.log(this.eventForm.value);
-    // this.eventService.addNewEvent(this.eventForm.value).subscribe(data=>{
-    //   if(data.results==1){
-    //     alert("event edited.");
-    //     window.location.href="";
-    //   }else{
-    //     alert("error..");
-    //   }
-    // })
+    this.eventService.editEvent(this.eventId,this.eventForm.value).subscribe(data=>{
+      console.log(data)
+      if(data.results==1){
+        alert("event edited successfully.");
+        window.location.href="";
+      }else{
+        alert("error..");
+      }
+    })
   }
 
   backToHome(){

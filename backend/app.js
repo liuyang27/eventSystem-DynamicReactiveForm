@@ -66,6 +66,7 @@ app.get ("/",                          mainCtrl.showIndex);
 // app.post("/unregister",             mainCtrl.unregister);
 app.get("/sendemail",                  mainCtrl.sendEmail)
 app.post("/event",                     mainCtrl.doAddEvent)
+app.put("/event/:eid",                 mainCtrl.doEditEvent)
 app.delete("/event/:eid",              mainCtrl.doDeleteEvent)
 app.get("/event/:eid",                 mainCtrl.getEventDetail)
 app.post("/checkin",                   mainCtrl.checkin)

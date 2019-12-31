@@ -16,7 +16,7 @@
     Welcome
 </p>
 <p *ngIf="data.code>0" style="text-align:center;font-size: 4vh">
-    {{data.username}}
+    {{data.user.Name}}
 </p>
 
 <h1 *ngIf="data.code==-1 || data.code==-2" style="text-align:center">
@@ -28,3 +28,6 @@
     <br><br>
     Database error...
 </h1>
+
+<button mat-flat-button color="primary" style="width:30%;margin-top: 10px" (click)="printQrcode()">Print QRCode</button>
+<button (click)="generatePdf()">Open PDF</button>

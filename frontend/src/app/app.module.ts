@@ -18,6 +18,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { CheckindialogComponent } from './components/checkindialog/checkindialog.component';
 import { EditeventComponent } from './components/editevent/editevent.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -73,7 +73,7 @@ export class CheckinComponent implements OnInit {
 
           this.qrScannerComponent.capturedQr.subscribe(result => {
             this.spinner.show();
-            var bytes  = CryptoJS.AES.decrypt(result.toString(), 'secret key 123');
+            var bytes  = CryptoJS.AES.decrypt(result.toString(),'hello world');
             var decyptedQRcode = bytes.toString(CryptoJS.enc.Utf8);   
 
             setTimeout(() => {
@@ -86,7 +86,7 @@ export class CheckinComponent implements OnInit {
               var canvas = document.querySelectorAll('canvas')
               canvas[0].style.display = 'none'
 
-              this.openDialog(data.results,data.username);
+              this.openDialog(data.results,data.user,data.PreEventSurvey);
             })
 
           })
@@ -106,16 +106,16 @@ export class CheckinComponent implements OnInit {
     this.qrScannerComponent.chooseCamera.next(this.selectedvideoDevice);
   }
 
-  openDialog(code,username): void {
+  openDialog(code,user,PreEventSurvey): void {
     this.dialogRef = this.dialog.open(CheckindialogComponent, {
       height: '60%',
       width: '80%',
-      data: {code: code, username: username}
+      data: {code: code, user: user,PreEventSurvey:PreEventSurvey}
     });
-    setTimeout(() => {
-      this.dialogRef.close();
-      this.qrScannerComponent.startScanning(this.selectedvideoDevice);
-    }, 1000);
+    // setTimeout(() => {
+    //   this.dialogRef.close();
+    //   this.qrScannerComponent.startScanning(this.selectedvideoDevice);
+    // }, 1000);
   }
 
 }

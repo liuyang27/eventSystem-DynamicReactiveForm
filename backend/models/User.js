@@ -8,7 +8,8 @@ var userSchema = new mongoose.Schema({
     Image_base64: String,
     Rawstring: String,
     Timestamp: Date,
-    Events: Array
+    Events: Array,
+    Company:String,
 });
 
 var User = mongoose.model("User", userSchema, "User_Table");

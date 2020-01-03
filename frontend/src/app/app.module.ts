@@ -17,7 +17,8 @@ import { NgQrScannerModule } from 'angular2-qrscanner';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { CheckindialogComponent } from './components/checkindialog/checkindialog.component';
 import { EditeventComponent } from './components/editevent/editevent.component';
-
+import { EssenceNg2PrintModule } from 'essence-ng2-print';
+import { NgxQRCodeModule } from 'ngx-qrcode2'
 
 @NgModule({
   declarations: [
@@ -37,7 +38,9 @@ import { EditeventComponent } from './components/editevent/editevent.component';
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
     NgQrScannerModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    EssenceNg2PrintModule,
+    NgxQRCodeModule
   ],
   providers: [],
   bootstrap: [AppComponent],

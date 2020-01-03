@@ -190,26 +190,30 @@ exports.checkin = function (req, res) {
 
     if (results.code < 0) {
       console.log(results.code);
-      res.json({ "results": results.code, "username": null });
+      res.json({ "results": results.code });
 
     } else {
       var d = new Date();
       UserEvent.findByIdAndUpdate(qrcode, { $push: { Attendance: d } }, function (err, response) {
         if (err) {
           console.log(results.code);
-          res.json({ "results": -3, "username": null });     //update mongoDB fail 
+          res.json({ "results": -3 });     //update mongoDB fail 
           return;
         }
 
         User.findById(results.user[0].UserId, function (error, data) {
           if (error) {
             console.log(results.code);
-            res.json({ "results": -3, "username": null });     //update mongoDB fail 
+            res.json({ "results": -3 });     //update mongoDB fail 
             return;
           }
           console.log(results.code);
-          // console.log(data)
 
+          // console.log(data)
+          if(!data){
+            res.json({ "results": -3}); 
+            return;
+          }
           var qrCodeContent = {
             Name: data.Name,
             Company: data.Company,
@@ -218,22 +222,12 @@ exports.checkin = function (req, res) {
           }
 
           UserEvent.findById(qrcode, function (e, details) {
-            console.log("--------------details---------")
+            console.log("--------------presurvey details---------")
             console.log(details.PreEventSurvey)
-            console.log("--------------details---------")
-            // await createPDF(qrCodeContent, details.PreEventSurvey);
-            
-            res.json({ "results": results.code, "user": qrCodeContent,"PreEventSurvey":details.PreEventSurvey });   //check-in ok
+
+            res.json({ "results": results.code, "user": qrCodeContent, "PreEventSurvey": details.PreEventSurvey });   //check-in ok
 
           })
-
-
-          
-          // res.json({ "results": results.code, "username": data.Name });   //check-in ok
-
-          // if(results.code==1){
-
-          // }
         })
       })
     }
@@ -243,8 +237,10 @@ exports.checkin = function (req, res) {
 
 }
 
+
+//////////////////////////////////////////backend create PDF and print (for future use)////////////////////////////////////////////
 async function createPDF(qrCodeData, questionList) {
-  var qrCodeString=JSON.stringify(qrCodeData)
+  // var qrCodeString=JSON.stringify(qrCodeData)
   var _width = 172 //width ~2.4 inch
   var _height = 280 // height ~3.9 inch
   const doc = new PDFDocument({
@@ -296,25 +292,26 @@ async function createPDF(qrCodeData, questionList) {
   })
   console.log(JSON.stringify(qrCodeData))
 
-
-  //---------print----------
-  // printer
-  //   .list()
-  //   .then(console.log)
-  //   .catch(console.error);
-
-  // const options = {
-  //   printer: "Brother QL-820NWB"
-  // };
-
-  // printer
-  //   .print('qrCodePDF/ddd.pdf', options)
-  //   .then(console.log)
-  //   .catch(console.error);
-
-
-
 }
+
+
+function print() {
+  printer
+    .list()
+    .then(console.log)
+    .catch(console.error);
+
+  const options = {
+    printer: "Brother QL-820NWB"
+  };
+
+  printer
+    .print('qrCodePDF/ddd.pdf', options)
+    .then(console.log)
+    .catch(console.error);
+}
+
+
 
 
 

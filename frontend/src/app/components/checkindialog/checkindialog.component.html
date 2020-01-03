@@ -29,5 +29,15 @@
     Database error...
 </h1>
 
-<button mat-flat-button color="primary" style="width:30%;margin-top: 10px" (click)="printQrcode()">Print QRCode</button>
-<button (click)="generatePdf()">Open PDF</button>
+
+<div style="display: flex;justify-content:space-around;">
+    <button mat-flat-button *ngIf="data.code>0" color="primary" style="width:30%;margin-top: 10px" (click)="closeDialog()">Close</button>
+    <button mat-flat-button *ngIf="data.code>0" color="primary" style="width:30%;margin-top: 10px" (click)="generatePdf()">Print QRCode</button>
+</div>
+<p *ngIf="data.code>0" style="text-align:center"> (window will be closing in <b>{{popupDuration}}</b> seconds)</p>
+
+
+
+
+
+

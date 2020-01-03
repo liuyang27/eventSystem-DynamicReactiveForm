@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../services/event.service';
 import { QrScannerComponent } from 'angular2-qrscanner';
@@ -7,6 +7,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { MatDialog } from '@angular/material/dialog';
 import { CheckindialogComponent } from '../checkindialog/checkindialog.component';
 import * as CryptoJS from "crypto-js";
+
 
 @Component({
   selector: 'app-checkin',
@@ -74,7 +75,13 @@ export class CheckinComponent implements OnInit {
           this.qrScannerComponent.capturedQr.subscribe(result => {
             this.spinner.show();
             var bytes  = CryptoJS.AES.decrypt(result.toString(),'hello world');
-            var decyptedQRcode = bytes.toString(CryptoJS.enc.Utf8);   
+            var decyptedQRcode=null;
+            try {
+              decyptedQRcode = bytes.toString(CryptoJS.enc.Utf8);  
+            } catch (error) {
+              console.log(error)
+            }
+             
 
             setTimeout(() => {
               /** spinner ends after 5 seconds */
@@ -108,14 +115,23 @@ export class CheckinComponent implements OnInit {
 
   openDialog(code,user,PreEventSurvey): void {
     this.dialogRef = this.dialog.open(CheckindialogComponent, {
-      height: '60%',
+      height: '70%',
       width: '80%',
       data: {code: code, user: user,PreEventSurvey:PreEventSurvey}
     });
-    // setTimeout(() => {
-    //   this.dialogRef.close();
-    //   this.qrScannerComponent.startScanning(this.selectedvideoDevice);
-    // }, 1000);
+    if(code<0){
+      setTimeout(() => {
+        this.dialogRef.close();
+      }, 1000);
+    }else{
+      setTimeout(() => {
+        this.dialogRef.close();
+      }, 5000);
+    }
+    this.dialogRef.afterClosed().subscribe(result => {
+      this.qrScannerComponent.startScanning(this.selectedvideoDevice);
+    });
+ 
   }
 
 }

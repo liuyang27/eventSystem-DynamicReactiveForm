@@ -78,6 +78,9 @@ export class EditeventComponent implements OnInit,AfterContentChecked {
         var tempOptionsPrint = this.fb.array([]);
         element.options.forEach(opt=>{
           tempOptions.push(this.fb.control(opt,Validators.required))
+          if(element.print==false){
+            tempOptionsPrint.push(this.fb.control(null));
+          }
         })
         if(element.print==true){
           element.optionsPrint.forEach(optPrint=>{

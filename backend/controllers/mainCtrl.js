@@ -1,10 +1,10 @@
-var formidable = require('formidable');
-// var Student=require("../models/Student");
 // var crypto = require('crypto');
-var Course = require("../models/Course");
 // var _= require("underscore");
+// var Course = require("../models/Course");
+
+// var formidable = require('formidable'); // notes: form input need a name!!!!!!!
+
 const nodemailer = require("nodemailer");
-// const fs = require('fs');
 var Event = require("../models/Event");
 var UserEvent = require("../models/UserEvent");
 var User = require("../models/User");
@@ -140,11 +140,11 @@ exports.sendEmail = function (req, res) {
 
 
 exports.doAddEvent = function (req, res) {
-  var form = new formidable.IncomingForm();
-  form.parse(req, function (err, fields, files) {
+  // var form = new formidable.IncomingForm();
+  // form.parse(req, function (err, fields, files) {
     console.log("------------------------ADD EVENT-----------------------------")
-    console.log(fields);
-    var e = new Event(fields);
+    console.log(req.body);
+    var e = new Event(req.body);
     e.save(function (err) {
       if (err) {
         console.log(err);
@@ -159,7 +159,7 @@ exports.doAddEvent = function (req, res) {
     // Student.addStudent(fields,function(results){
     // 	res.json({"results":results});
     // });	
-  })
+  // })
 }
 
 
